@@ -1,19 +1,24 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "target": "ESNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "jsx": "react"
+    "module": "NodeNext",               // Keep this if using ES Modules (ESM)
+    "target": "ESNext",                 // Use latest ECMAScript features
+    "moduleResolution": "NodeNext",     // Required for ESM (if using CommonJS, change to "Node")
+    "esModuleInterop": true,            // Allow importing CommonJS modules easily
+    "resolveJsonModule": true,          // Enable JSON imports
+    "allowSyntheticDefaultImports": true, // Allow default imports for non-ES modules
+    "skipLibCheck": true,               // Skip type checking of `.d.ts` files (avoids conflicts)
+    "strict": true,                     // Enable strict mode for better type safety
+    "outDir": "./dist",                 // Compiled files go here
+    "forceConsistentCasingInFileNames": true, // Avoid case-sensitive import issues
+    "experimentalDecorators": true,      // Enable decorators (for potential NestJS use)
+    "emitDecoratorMetadata": true,       // Emit metadata for decorators (if used)
+    "jsx": "react",                      // Enable JSX (remove if not using React)
+    "types": ["node", "express", "express-session"] // Ensure session types are recognized
   },
-  "include": ["src/**/*.ts", "src/server.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",        // Include all TypeScript files inside src
+    "src/app.ts",         // Ensure app.ts is included
+   "src/types" // Properly include all custom types
+  ],
+  "exclude": ["node_modules", "dist"]  // Exclude compiled files and dependencies
 }

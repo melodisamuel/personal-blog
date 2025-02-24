@@ -1,31 +1,46 @@
 import { Request, Response } from 'express';
-import { creatUser, findUserByUsername } from '../models/user'; 
+import { createUser, findUserByUsername } from '../models/user';
 import bcrypt from 'bcryptjs';
+import { Session } from 'express-session';
 
-// Register a new user 
-export async function registerUser(req: Request, res: Response) {
-    const { username, password } = req.body;
-    const existingUser = await findUserByUsername(username);
+// Extend Request to include session type
+interface AuthenticatedRequest extends Request {
+    session: Session & { userId?: number };
+}
 
-    if(existingUser) {
-        return res.status(400).send('Username already exists');
+// Register a new user
+export async function registerUser(req: Request, res: Response): Promise<void> {
+    try {
+        const { username, password } = req.body;
+        const existingUser = await findUserByUsername(username);
+
+        if (existingUser) {
+            res.status(400).send('Username already exists');
+            return;
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await createUser(username, hashedPassword);
+        res.redirect('/login');
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
     }
+}
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await creatUser(username, hashedPassword);
-    res.redirect('/login')
+// Login User
+export async function loginUser(req: AuthenticatedRequest, res: Response): Promise<void> {
+    try {
+        const { username, password } = req.body;
+        const user = await findUserByUsername(username);
+
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            res.status(401).send('Invalid credentials');
+            return;
+        }
+
+        req.session.userId = user.id;  // ✅ No more TS error
+        res.redirect('/');
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
     }
-
-
-// Login User 
-export async function loginUser(req: Request, res: Response) {
-    const { usernmae, password } = req.body;
-    const user = await findUserByUsername(usernmae);
-
-    if(!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).send('Invalid credentials');
-    }
-
-    req.session.userId = user.id;
-    res.redirect('/');
 }
