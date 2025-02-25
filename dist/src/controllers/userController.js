@@ -10,20 +10,24 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 // Register a new user
 async function registerUser(req, res) {
     try {
+        console.log('Request Body:', req.body); // Debug
         const { username, password } = req.body;
-        const existingUser = await (0, user_1.findUserByUsername)(username);
+        
+        const existingUser = await findUserByUsername(username);
         if (existingUser) {
-            res.status(400).send('Username already exists');
-            return;
+            return res.status(400).send('Username already exists');
         }
-        const hashedPassword = await bcryptjs_1.default.hash(password, 10);
-        await (0, user_1.createUser)(username, hashedPassword);
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await createUser(username, hashedPassword);
+        
         res.redirect('/login');
-    }
-    catch (error) {
+    } catch (error) {
+        console.error('Register Error:', error); // Log error
         res.status(500).send('Internal Server Error');
     }
 }
+
 // Login User
 async function loginUser(req, res) {
     try {
