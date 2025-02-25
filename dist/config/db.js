@@ -8,10 +8,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config(); // Load env variables
 // Create a MYSQL connection pool
 const pool = promise_1.default.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host: "localhost",
+    user: "root",
+    password: "prismasql",
+    database: "personal_blog",
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
