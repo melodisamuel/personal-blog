@@ -14,5 +14,5 @@ async function findUserByUsername(username) {
 }
 // Create a new user
 async function createUser(username, password) {
-    await db_1.default.query('INSERT INTO users (username, password) VALUES (?, ?', [username, password]);
+    await db_1.default.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password]);
 }

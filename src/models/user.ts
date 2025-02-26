@@ -17,5 +17,5 @@ export async function findUserByUsername(username: string): Promise<User | null>
 
 // Create a new user
 export async function createUser(username: string, password: string): Promise<void> {
-    await pool.query('INSERT INTO users (username, password) VALUES (?, ?', [username, password]);
+    await pool.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, password]);
 }
